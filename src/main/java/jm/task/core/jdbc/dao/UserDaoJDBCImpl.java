@@ -5,7 +5,9 @@ import jm.task.core.jdbc.util.Util;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserDaoJDBCImpl implements UserDao {
@@ -32,6 +34,14 @@ public class UserDaoJDBCImpl implements UserDao {
     private static final String REMOVE_USER_BY_ID_SQL = """
             DELETE FROM users 
             WHERE id = ?
+            """;
+
+    private static final String GET_ALL_USERS_SQL = """
+            SELECT id,
+                name,
+                last_name,
+                age
+            FROM users
             """;
 
     public UserDaoJDBCImpl() {
@@ -79,7 +89,22 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public List<User> getAllUsers() {
-        return null;
+        List<User> result = new ArrayList<>();
+        try (var connection = Util.get();
+             var preparedStatement = connection.prepareStatement(GET_ALL_USERS_SQL)) {
+            var resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                result.add(new User(
+                        resultSet.getLong("id"),
+                        resultSet.getString("name"),
+                        resultSet.getString("last_name"),
+                        resultSet.getByte("age")
+                ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
     public void cleanUsersTable() {
