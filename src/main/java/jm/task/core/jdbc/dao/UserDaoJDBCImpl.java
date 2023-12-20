@@ -22,6 +22,13 @@ public class UserDaoJDBCImpl implements UserDao {
             DROP TABLE IF EXISTS users;
             """;
 
+    private static final String SAVE_USER_SQL = """
+            INSERT INTO users 
+            SET name = ?,
+                last_name = ?,
+                age = ?
+            """;
+
     public UserDaoJDBCImpl() {
 
     }
@@ -47,7 +54,16 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void saveUser(String name, String lastName, byte age) {
-
+        try (var connection = Util.get();
+             var preparedStatement = connection.prepareStatement(SAVE_USER_SQL)) {
+            preparedStatement.setString(1, name);
+            preparedStatement.setString(2, lastName);
+            preparedStatement.setByte(3, age);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("User hasn't been saved");
+            e.printStackTrace();
+        }
     }
 
     public void removeUserById(long id) {
