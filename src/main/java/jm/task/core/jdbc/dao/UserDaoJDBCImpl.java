@@ -43,7 +43,6 @@ public class UserDaoJDBCImpl implements UserDao {
              var preparedStatement = connection.prepareStatement(CREATE_USERS_TABLE_SQL)) {
             preparedStatement.execute();
         } catch (SQLException e) {
-            System.out.println("Table hasn't been created");
             e.printStackTrace();
         }
     }
@@ -53,7 +52,6 @@ public class UserDaoJDBCImpl implements UserDao {
              var preparedStatement = connection.prepareStatement(DROP_USERS_TABLE_SQL)) {
             preparedStatement.execute();
         } catch (SQLException e) {
-            System.out.println("Table hasn't been dropped");
             e.printStackTrace();
         }
     }
@@ -66,7 +64,6 @@ public class UserDaoJDBCImpl implements UserDao {
             preparedStatement.setByte(3, age);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("User hasn't been saved");
             e.printStackTrace();
         }
     }
@@ -77,7 +74,6 @@ public class UserDaoJDBCImpl implements UserDao {
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("User hasn't been removed");
             e.printStackTrace();
         }
     }
