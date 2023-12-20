@@ -18,6 +18,10 @@ public class UserDaoJDBCImpl implements UserDao {
             );
             """;
 
+    private static final String DROP_USERS_TABLE_SQL = """
+            DROP TABLE IF EXISTS users;
+            """;
+
     public UserDaoJDBCImpl() {
 
     }
@@ -33,7 +37,13 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void dropUsersTable() {
-
+        try (var connection = Util.get();
+             var preparedStatement = connection.prepareStatement(DROP_USERS_TABLE_SQL)) {
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            System.out.println("Table hasn't been dropped");
+            e.printStackTrace();
+        }
     }
 
     public void saveUser(String name, String lastName, byte age) {
