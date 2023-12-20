@@ -44,6 +44,10 @@ public class UserDaoJDBCImpl implements UserDao {
             FROM users
             """;
 
+    private static final String CLEAN_USERS_TABLE_SQL = """
+            TRUNCATE users
+            """;
+
     public UserDaoJDBCImpl() {
 
     }
@@ -108,6 +112,11 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void cleanUsersTable() {
-
+        try (var connection = Util.get();
+             var preparedStatement = connection.prepareStatement(CLEAN_USERS_TABLE_SQL)) {
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
