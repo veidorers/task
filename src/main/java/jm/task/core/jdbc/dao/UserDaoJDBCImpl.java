@@ -29,6 +29,11 @@ public class UserDaoJDBCImpl implements UserDao {
                 age = ?
             """;
 
+    private static final String REMOVE_USER_BY_ID_SQL = """
+            DELETE FROM users 
+            WHERE id = ?
+            """;
+
     public UserDaoJDBCImpl() {
 
     }
@@ -67,7 +72,14 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void removeUserById(long id) {
-
+        try (var connection = Util.get();
+             var preparedStatement = connection.prepareStatement(REMOVE_USER_BY_ID_SQL)) {
+            preparedStatement.setLong(1, id);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("User hasn't been removed");
+            e.printStackTrace();
+        }
     }
 
     public List<User> getAllUsers() {
