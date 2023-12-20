@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
-public class Util {
+public class JDBCUtil {
     private static final String URL_KEY = "db.url";
     private static final String USERNAME_KEY = "db.username";
     private static final String PASSWORD_KEY = "db.password";
@@ -22,7 +22,7 @@ public class Util {
         initializePool();
     }
 
-    private Util() {}
+    private JDBCUtil() {}
 
     private static void initializePool() {
         String dbPoolSize = PropertiesUtil.get(POOL_SIZE_KEY);
@@ -31,8 +31,8 @@ public class Util {
         sourceConnections = new ArrayList<>(poolSize);
 
         for (int i = 0; i < poolSize; i++) {
-            var connection = Util.open();
-            var proxyConnection = (Connection) Proxy.newProxyInstance(Util.class.getClassLoader(), new Class[]{Connection.class},
+            var connection = JDBCUtil.open();
+            var proxyConnection = (Connection) Proxy.newProxyInstance(JDBCUtil.class.getClassLoader(), new Class[]{Connection.class},
                     (proxy, method, args) -> method.getName().equals("close")
                             ? pool.add((Connection) proxy)
                             : method.invoke(connection, args));
