@@ -1,34 +1,22 @@
 package jm.task.core.jdbc;
 
-import jm.task.core.jdbc.dao.UserDaoHibernateImpl;
+import jm.task.core.jdbc.service.UserServiceImpl;
 
 public class Main {
     public static void main(String[] args)  {
-        var userDaoHibernate = new UserDaoHibernateImpl();
+        var userService = new UserServiceImpl();
+        userService.createUsersTable();
 
-        userDaoHibernate.dropUsersTable();
+        userService.saveUser("Mark", "Zuckerberg", (byte) 39);
+        userService.saveUser("Tim", "Cook", (byte) 63);
+        userService.saveUser("Jeff", "Bezos", (byte) 59);
+        userService.saveUser("Sergey", "Brin", (byte) 50);
 
-        userDaoHibernate.createUsersTable();
-        userDaoHibernate.createUsersTable();
-
-        userDaoHibernate.saveUser("Mark", "Zuckerberg", (byte) 39);
-        userDaoHibernate.saveUser("Tim", "Cook", (byte) 63);
-        userDaoHibernate.saveUser("Jeff", "Bezos", (byte) 59);
-        userDaoHibernate.saveUser("Sergey", "Brin", (byte) 50);
-
-        userDaoHibernate.removeUserById(3L);
-        userDaoHibernate.removeUserById(3L);
-
-        var users = userDaoHibernate.getAllUsers();
+        var users = userService.getAllUsers();
         users.forEach(System.out::println);
 
+        userService.cleanUsersTable();
 
-        userDaoHibernate.cleanUsersTable();
-        userDaoHibernate.cleanUsersTable();
-
-        userDaoHibernate.getAllUsers().forEach(System.out::println);
-
-        userDaoHibernate.dropUsersTable();
-        userDaoHibernate.dropUsersTable();
+        userService.dropUsersTable();
     }
 }
